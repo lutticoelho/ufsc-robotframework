@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  app:
+    image: ppodgorsek/robot-framework:latest
+    container_name: robotframework0
+    volumes:
+      - .reports:/opt/robotframework/reports:Z
+      - .tests:/opt/robotframework/tests:Z
+    environment:
+      BROWSER: "chrome"
