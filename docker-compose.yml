@@ -8,4 +8,5 @@ services:
       - .reports:/opt/robotframework/reports:Z
       - .tests:/opt/robotframework/tests:Z
     environment:
-      BROWSER: "chrome"
+      BROWSER: "firefox"
+      ROBOT_THREADS: 4
