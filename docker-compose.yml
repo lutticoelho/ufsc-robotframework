@@ -10,4 +10,4 @@ services:
       - .tests:/opt/robotframework/tests:Z
     environment:
       BROWSER: "chrome"
-      ROBOT_THREADS: 3
+      ROBOT_THREADS: 1
