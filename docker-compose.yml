@@ -3,10 +3,11 @@ version: '3'
 services:
   app:
     image: ppodgorsek/robot-framework:latest
-    container_name: robotframework0
+    container_name: robotframework1
+    shm_size: '3gb'
     volumes:
       - .reports:/opt/robotframework/reports:Z
       - .tests:/opt/robotframework/tests:Z
     environment:
-      BROWSER: "firefox"
-      ROBOT_THREADS: 4
+      BROWSER: "chrome"
+      ROBOT_THREADS: 3

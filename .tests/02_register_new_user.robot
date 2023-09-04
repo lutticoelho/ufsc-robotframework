@@ -1,11 +1,11 @@
 *** Settings ***
-Library             SeleniumLibrary
-Suite Setup         Open Browser               https://bueno.inf.br/teste/index.php?route=account/register&language=en-gb              Chrome
+Documentation     Registro de Usuário
+Resource          resources/main.robot
 
-*** Variables ***
+Suite Setup       Open OpenCart Page  ${HOST}/index.php?route=account/register&language=en-gb
+Suite Teardown    End Suite Test
 
 *** Test Cases ***
-
 Cenário inicial - Privace Policy não selecionado
     Registro    nome    sobrenome   email@email15.com  12345    0
     Wait Until Page Contains    Warning: You must agree to the Privacy Policy!    10
@@ -50,11 +50,9 @@ Cenário todos vazios
     Wait Until Page Contains    Password must be between 4 and 20 characters!    10
 
 Cenário inicial - Registro com sucesso
-    Registro    nome    sobrenome   email@email17.com  12345    1
-    Wait Until Page Contains    Your Account Has Been Created!    10
-    Close Browser
-
-    # Sleep                       10s
+    ${email}=   FakerLibrary.Email
+    Registro    nome    sobrenome   ${email}  12345    1
+    Wait Until Page Contains    Your Account Has Been Created!    15
 
 *** Keywords ***
 Registro

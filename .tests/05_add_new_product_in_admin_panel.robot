@@ -1,17 +1,27 @@
 *** Settings ***
-Library    SeleniumLibrary
-Library    String
-Library    FakerLibrary
+Documentation     Gestão de produtos no Painel Administrativo
+Resource          resources/main.robot
 
-*** Variables ***
-${LOGIN URL}      https://bueno.inf.br/teste
-${BROWSER}        Chrome
+Test Setup        Open Browser And Acess Admin Panel
+Test Teardown     End Suite Test
 
 *** Test Cases ***
-Create New Product in Admin Panel
-    Open Browser And Acess Admin Panel
+Create New Product in Admin Panel with success
     Open Product Pages
+    ${some_uuid}    Uuid 4
+    Fill Product Page Form  prod-seo-${some_uuid}
+    Wait Until Page Contains  Success: You have modified products!    10
+    
+Create New Product in Admin Panel should show error if SEO input is already in use
+    Open Product Pages
+    Fill Product Page Form  prod-seo
+    Wait Until Page Contains  Warning: Please check the form carefully for errors!    10
+
+*** Keywords ***
+Fill Product Page Form 
+    [Arguments]    ${prod-seo}
     Click Link  jquery:#content > div.page-header > div > div > a
+    Sleep  2
     Input Text  id:input-name-1  New Product
     Input Text  id:input-meta-title-1  Meta Title
     Input Text  id:input-meta-description-1  Meta description
@@ -19,19 +29,13 @@ Create New Product in Admin Panel
     Input Text  id:input-model  ProductModel123
     Input Text  id:input-price  100
     Execute Javascript  $('#tab-data').hide(); $('#tab-seo').show()
-    ${some_uuid}    Uuid 4
-    Input Text  id:input-keyword-0-1  prod-seo-${some_uuid} 
+    Input Text  id:input-keyword-0-1  ${prod-seo} 
     Click Element  jquery:#content > div.page-header > div > div > button
-    Wait Until Page Contains  Success: You have modified products!    10
-    Close Browser
 
-*** Keywords ***
 Open Browser And Acess Admin Panel
     Open Browser To Login Page
-    Input Text  id=input-username  admin
-    Input Text  id=input-password  nCvj#D8V$b5X$7Dq%wGu
-    Click Button  css=button[type='submit']
-    Wait Until Location Contains  dashboard
+    OpenCart Login  admin  nCvj#D8V$b5X$7Dq%wGu
+    Wait Until Location Contains  dashboard    10
 
 Open Product Pages
     ${ORIGINAL URL}  Get Location 
@@ -40,7 +44,7 @@ Open Product Pages
     Wait Until Location Contains  catalog/product
 
 Open Browser To Login Page
-    Open Browser    ${LOGIN URL}/painel    ${BROWSER}
-    Maximize Browser Window
+    Open OpenCart Page  ${HOST}/painel
     Title Should Be    Administration
+
 
